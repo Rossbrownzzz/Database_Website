@@ -43,7 +43,10 @@ border: 1px solid black;
 			<main>
 				<div class="row">
 					<div class="col-8">
-						<h2>Welcome</h2>
+					<form>
+					<label for="fname">search:</label>
+					<input type="text" id="fname" name="fname"><br>
+					</form> 
 					</div>
 				</div>
 
