@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<style>
+td {
+border: 1px solid black;
+}
+</style>
+
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -40,16 +46,64 @@
 						<h2>Welcome</h2>
 					</div>
 				</div>
-				<!--<table>
-					{% for row in test %}
-					<tr>
-					  <th> {{ row[0] }}</th>
-					</tr> 
-					{% endfor %}
-				  </table> -->
+
 					<h1>
-					<?php 
-					echo "Hello World";
+					<?php
+					$servername = "localhost";
+					$username = "admin";
+					$password = "workplaceready";
+					$dbname = "pokemondb";
+
+					// Create connection
+					$conn = new mysqli($servername, $username, $password, $dbname);
+					// Check connection
+					if ($conn->connect_error) {
+					die("Connection failed: " . $conn->connect_error);
+					}
+
+					$sql = "SELECT * FROM pokemon";
+					$result = $conn->query($sql);
+
+					//if the table is not empty
+					if ($result->num_rows > 0) {
+					// format as table
+					echo "<div><table>";
+
+					//add headers
+					echo "<tr>";
+					echo "<td align='center' style='font-size:25px'>Name</td>";
+					echo "<td align='center' style='font-size:25px'>pokedex number</td>";
+					echo "<td align='center' style='font-size:25px'>generation</td>";
+					echo "<td align='center' style='font-size:25px'>height (m)</td>";
+					echo "<td align='center' style='font-size:25px'>weight (kg)</td>";
+					echo "<td align='center' style='font-size:25px'>total stat points</td>";
+					echo "<td align='center' style='font-size:25px'>catch rate</td>";
+					echo "<td align='center' style='font-size:25px'>percentage male</td>";
+					echo "<td align='center' style='font-size:25px'>egg cycles</td>";
+					echo "<td align='center' style='font-size:25px'>legendary status</td>";
+					echo "</tr>\n";
+
+
+					//display all values out of the table
+					while($row = $result->fetch_assoc()) {
+					echo "<tr>";
+					echo "<td align='center' style='font-size:25px'>$row[name]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[generation]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[height_m]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[weight_kg]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[total_points]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[catch_rate]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[percentage_male]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[egg_cycles]</td>";
+					echo "<td align='center' style='font-size:25px'>$row[legendary_status]</td>";
+					echo "</tr>\n";
+					}
+					echo "</table></div>";
+					} else {
+					echo "0 results";
+					}
+					$conn->close();
 					?>
 					</h1>
 				</main>
