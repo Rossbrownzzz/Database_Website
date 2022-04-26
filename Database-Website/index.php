@@ -43,70 +43,139 @@ border: 1px solid black;
 			<main>
 				<div class="row">
 					<div class="col-8">
-					<form>
-					<label for="fname">search:</label>
-					<input type="text" id="fname" name="fname"><br>
+					<form method="get">
+					<label for="queryVal">search:</label>
+					<input type="text" id="queryVal" name="queryVal"><br>
 					</form> 
 					</div>
 				</div>
 
 					<h1>
 					<?php
-					$servername = "localhost";
-					$username = "admin";
-					$password = "workplaceready";
-					$dbname = "pokemondb";
-
-					// Create connection
-					$conn = new mysqli($servername, $username, $password, $dbname);
-					// Check connection
-					if ($conn->connect_error) {
-					die("Connection failed: " . $conn->connect_error);
-					}
-
-					$sql = "SELECT * FROM pokemon";
-					$result = $conn->query($sql);
-
-					//if the table is not empty
-					if ($result->num_rows > 0) {
 					// format as table
 					echo "<div><table>";
 
-					//add headers
-					echo "<tr>";
-					echo "<td align='center' style='font-size:25px'>Name</td>";
-					echo "<td align='center' style='font-size:25px'>pokedex number</td>";
-					echo "<td align='center' style='font-size:25px'>generation</td>";
-					echo "<td align='center' style='font-size:25px'>height (m)</td>";
-					echo "<td align='center' style='font-size:25px'>weight (kg)</td>";
-					echo "<td align='center' style='font-size:25px'>total stat points</td>";
-					echo "<td align='center' style='font-size:25px'>catch rate</td>";
-					echo "<td align='center' style='font-size:25px'>percentage male</td>";
-					echo "<td align='center' style='font-size:25px'>egg cycles</td>";
-					echo "<td align='center' style='font-size:25px'>legendary status</td>";
-					echo "</tr>\n";
+
+					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
+						echo("selecting all");
+					//otherwise, break on the correct query selection and display
+					else:
+						echo($_GET['queryVal']);
+					endif;
 
 
-					//display all values out of the table
-					while($row = $result->fetch_assoc()) {
-					echo "<tr>";
-					echo "<td align='center' style='font-size:25px'>$row[name]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[generation]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[height_m]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[weight_kg]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[total_points]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[catch_rate]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[percentage_male]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[egg_cycles]</td>";
-					echo "<td align='center' style='font-size:25px'>$row[legendary_status]</td>";
-					echo "</tr>\n";
+					
+					//default, loads all values and displays them
+					$filteredQuery = $_GET['queryVal'];
+					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
+						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;");
+					//otherwise, break on the correct query selection and display
+					elseif (preg_match("/abc/", $filteredQuery)):
+						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name WHERE total_points>590 ORDER BY total_points;");
+					else:
+						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;");
+					endif;
+
+
+					function displayData($sqlquery){
+						//establish connection
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the bale
+						$result = $conn->query($sqlquery);
+
+						//display all headers
+						echo "<tr>";
+						//name
+						echo "<td align='center' style='font-size:25px'>Name 
+								<form method='get'>
+								<input type='text' id='nameQuery' name='nameQuery'><br>
+								</form> 
+								</td>";
+						//dex
+						echo "<td align='center' style='font-size:25px'>pokedex #
+								<form method='get'>
+								<input type='text' id='dexQuery' name='dexQuery'><br>
+								</form> 
+								</td>";
+						//hp
+						echo "<td align='center' style='font-size:25px'>hit points
+								<form method='get'>
+								<input type='text' id='hpQuery' name='hpQuery'><br>
+								</form> 
+								</td>";
+						//attack
+						echo "<td align='center' style='font-size:25px'>attack
+								<form method='get'>
+								<input type='text' id='attackQuery' name='attackQuery'><br>
+								</form> 
+								</td>";
+						//defense
+						echo "<td align='center' style='font-size:25px'>defense
+								<form method='get'>
+								<input type='text' id='defenseQuery' name='defenseQuery'><br>
+								</form> 
+								</td>";
+						//sp attack
+						echo "<td align='center' style='font-size:25px'>sp. attack
+								<form method='get'>
+								<input type='text' id='spattackQuery' name='spattackQuery'><br>
+								</form> 
+								</td>";
+						//sp def
+						echo "<td align='center' style='font-size:25px'>sp. defense
+								<form method='get'>
+								<input type='text' id='spdefQuery' name='spdefQuery'><br>
+								</form> 
+								</td>";
+						//speed
+						echo "<td align='center' style='font-size:25px'>speed
+								<form method='get'>
+								<input type='text' id='speQuery' name='speQuery'><br>
+								</form> 
+								</td>";
+						//total
+						echo "<td align='center' style='font-size:25px'>total stats
+								<form method='get'>
+								<input type='text' id='totalQuery' name='totalQuery'><br>
+								</form> 
+								</td>";
+						//legendary
+						echo "<td align='center' style='font-size:25px'>legendary
+								<form method='get'>
+								<input type='text' id='legendaryQuery' name='legendaryQuery'><br>
+								</form> 
+								</td>";
+
+						echo "</tr>\n";
+
+						//display all values
+						while($row = $result->fetch_assoc()) {
+							echo "<tr>";
+							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[hp]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[attack]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[defense]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[special_attack]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[special_defense]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[speed]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[total_points]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[legendary_status]</td>";
+							echo "</tr>\n";
+							}
+						echo "</table></div>";
+						$conn->close();
 					}
-					echo "</table></div>";
-					} else {
-					echo "0 results";
-					}
-					$conn->close();
+
 					?>
 					</h1>
 				</main>
