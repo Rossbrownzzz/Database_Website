@@ -52,6 +52,9 @@ border: 1px solid black;
 
 					<h1>
 					<?php
+					
+					//TODO organize the table so it just fills the screen and nothing more
+
 					// format as table
 					echo "<div><table>";
 
@@ -65,6 +68,8 @@ border: 1px solid black;
 
 
 					
+					//TODO fill in more (modular) queries
+
 					//default, loads all values and displays them
 					$filteredQuery = $_GET['queryVal'];
 					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
@@ -156,7 +161,9 @@ border: 1px solid black;
 								</td>";
 
 						echo "</tr>\n";
-
+						
+						//TODO add in check for empty data
+						
 						//display all values
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
