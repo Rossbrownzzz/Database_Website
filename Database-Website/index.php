@@ -41,11 +41,20 @@ border: 1px solid black;
 			</div>
 		</nav>
 			<main>
-
 					<h1>
 					<?php
 					
-					//TODO organize the table so it just fills the screen and nothing more
+
+					//TODO fix the formatting of the search bar, it looks terrible
+
+				 	//TODO fix forms to require regular expressions that match the format of <, >, <=, >=, or = for numberic values
+					// 		followed by a number. this can be used for modular sql statements
+					
+					echo
+						'<form>
+						<label for="queryVal">search:</label>
+						<input type="text" id="queryVal" name="queryVal"><br>
+						</form>'; 
 
 					// format as table
 					echo "<div><table>";
@@ -60,7 +69,7 @@ border: 1px solid black;
 					*/
 
 					
-					//TODO fill in more (modular) queries [leave for Ross pls, I have a good idea for this]
+					//TODO fill in more (modular) queries
 
 					//TODO add pokemon type to the table
 
@@ -77,6 +86,8 @@ border: 1px solid black;
 					endif;
 
 
+
+					//TODO organize the table so it just fills the screen and nothing more
 					function displayData($sqlquery){
 						//establish connection
 						$servername = "localhost";
@@ -93,73 +104,28 @@ border: 1px solid black;
 						$result = $conn->query($sqlquery);
 
 
-						//TODO fix forms to require regular expressions that match the format of <, >, <=, >=, or = for numberic values
-						// 		followed by a number. this can be used for modular sql statements
-
-						//TODO set the default text in forms to whatever was searched previously if there was something searched previously
-
 						//display all headers
 						echo "<tr>";
 						//name
-						echo "<td align='center' style='font-size:25px'>Name 
-								<form method='get'>
-								<input type='text' id='nameQuery' name='nameQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>Name</td>";
 						//dex
-						echo "<td align='center' style='font-size:25px'>pokedex #
-								<form method='get'>
-								<input type='text' id='dexQuery' name='dexQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
 						//hp
-						echo "<td align='center' style='font-size:25px'>hit points
-								<form method='get'>
-								<input type='text' id='hpQuery' name='hpQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>hit points</td>";
 						//attack
-						echo "<td align='center' style='font-size:25px'>attack
-								<form method='get'>
-								<input type='text' id='attackQuery' name='attackQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>attack</td>";
 						//defense
-						echo "<td align='center' style='font-size:25px'>defense
-								<form method='get'>
-								<input type='text' id='defenseQuery' name='defenseQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>defense</td>";
 						//sp attack
-						echo "<td align='center' style='font-size:25px'>sp. attack
-								<form method='get'>
-								<input type='text' id='spattackQuery' name='spattackQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>sp. attack</td>";
 						//sp def
-						echo "<td align='center' style='font-size:25px'>sp. defense
-								<form method='get'>
-								<input type='text' id='spdefQuery' name='spdefQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>sp. defense</td>";
 						//speed
-						echo "<td align='center' style='font-size:25px'>speed
-								<form method='get'>
-								<input type='text' id='speQuery' name='speQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>speed</td>";
 						//total
-						echo "<td align='center' style='font-size:25px'>total stats
-								<form method='get'>
-								<input type='text' id='totalQuery' name='totalQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>total stats</td>";
 						//legendary
-						echo "<td align='center' style='font-size:25px'>legendary
-								<form method='get'>
-								<input type='text' id='legendaryQuery' name='legendaryQuery'><br>
-								</form> 
-								</td>";
+						echo "<td align='center' style='font-size:25px'>legendary</td>";
 
 						echo "</tr>\n";
 						
