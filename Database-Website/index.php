@@ -41,14 +41,6 @@ border: 1px solid black;
 			</div>
 		</nav>
 			<main>
-				<div class="row">
-					<div class="col-8">
-					<form method="get">
-					<label for="queryVal">search:</label>
-					<input type="text" id="queryVal" name="queryVal"><br>
-					</form> 
-					</div>
-				</div>
 
 					<h1>
 					<?php
@@ -58,24 +50,27 @@ border: 1px solid black;
 					// format as table
 					echo "<div><table>";
 
-
+					/* keep this around for now, Ross needs the reference
 					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
 						echo("selecting all");
 					//otherwise, break on the correct query selection and display
 					else:
 						echo($_GET['queryVal']);
 					endif;
-
+					*/
 
 					
-					//TODO fill in more (modular) queries
+					//TODO fill in more (modular) queries [leave for Ross pls, I have a good idea for this]
 
+					//TODO add pokemon type to the table
+
+
+					////////////////////////this is placeholder. typing abc into name query box adjusts the query
 					//default, loads all values and displays them
-					$filteredQuery = $_GET['queryVal'];
-					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
+					if(!isset($_GET['nameQuery']) || "" == $_GET['nameQuery']):
 						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;");
 					//otherwise, break on the correct query selection and display
-					elseif (preg_match("/abc/", $filteredQuery)):
+					elseif (preg_match("/abc/", $_GET['nameQuery'])):
 						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name WHERE total_points>590 ORDER BY total_points;");
 					else:
 						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;");
@@ -96,6 +91,12 @@ border: 1px solid black;
 
 						//query the bale
 						$result = $conn->query($sqlquery);
+
+
+						//TODO fix forms to require regular expressions that match the format of <, >, <=, >=, or = for numberic values
+						// 		followed by a number. this can be used for modular sql statements
+
+						//TODO set the default text in forms to whatever was searched previously if there was something searched previously
 
 						//display all headers
 						echo "<tr>";
@@ -163,7 +164,9 @@ border: 1px solid black;
 						echo "</tr>\n";
 						
 						//TODO add in check for empty data
-						
+
+						//TODO make every other row of the table a different shade
+
 						//display all values
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
