@@ -45,49 +45,74 @@ border: 1px solid black;
 					<?php
 					
 
-					//TODO fix the formatting of the search bar, it looks terrible
+					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
 					echo
 						'<form>
 						<label for="queryVal">search:</label>
 						<input type="text" id="queryVal" name="queryVal"><br>
 						</form>'; 
 
+					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
-					//regex to check against
-					$allowable = "/[hp|attack|defense|sp. attack|sp. defense|speed|total][<|>|<=|>=|=][0-9]*/";
+					//TODO allow searching by pokemon name, and legendary status
+					//regex validates input
+					$allowable = 
+// (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
+"/(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,)*)+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
-						if(preg_match($allowable, $_GET['queryVal'])){
-							//print it
-							echo $_GET['queryVal'];
-							//reformat it to be searchable based on database schema
-
-							//TODO, this always matches on special attack. that needs fixing.
+						if (preg_match($allowable, $_GET['queryVal'])){
 							$userQuery = $_GET['queryVal'];
-							if(preg_match("/[special attack][.]*/", $userQuery)){
-								echo "first?";
-								$userQuery = preg_replace("/[special attack]/", "special_attack", $userQuery);
-							}
-							elseif(preg_match("/[special defense][.]*/", $userQuery)){
-								$userQuery = preg_replace("/[special defense]/", "special_dfense", $userQuery);
-							}
-							elseif(preg_match("/[total][.]*/", $userQuery)){
-								$userQuery = preg_replace("/[total]/", "total_points", $userQuery);
-							}
-							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name where " . $userQuery . ";";
+							// display the current query conditions
 							echo $userQuery;
+							//reformat it to be searchable based on database schema
+							$userQuery = preg_replace("/sp. attack|special attack/", "special_attack", $userQuery);
+							$userQuery = preg_replace("/sp. defense|special defense/", "special_defense", $userQuery);
+							$userQuery = preg_replace("/total/", "total_points", $userQuery);
+							
+							//sort out whether or not there was an asc or desc call, and find what was sorted by
+							$startsearch = -1;
+							$ascORdesc = "";
+							$holdbackwards = "";
+							if(strpos($userQuery, "asc") != false){
+								$startsearch = strpos($userQuery, "asc");
+								$ascORdesc = "asc";
+							}
+							elseif(strpos($userQuery, "desc") != false){
+								$startsearch = strpos($userQuery, "desc");
+								$ascORdesc = "desc";
+							}
+							while(($startsearch > 0) & ($userQuery[$startsearch-1] != ",")){
+								$holdbackwards = $holdbackwards . $userQuery[$startsearch-1];
+								$startsearch = $startsearch - 1;
+							}
+
+							//do final formatting now that order is sorted
+							$userQuery = preg_replace("/(,| , | ,|, )(hp|hit points|attack|defense|sp\. attack|special attack|sp\. defense|special defense|speed|total) (asc|desc)/", "", $userQuery);
+							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
+
+							//construct the query based on search values
+							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
+							//if it was more than just asc or desc
+							if($startsearch != 0){
+								$query = $query . "where " . $userQuery;
+							}
+							//if there was an asc or desc part
+							if($ascORdesc != ""){
+								$query = $query . " ORDER BY " . strrev($holdbackwards) . $ascORdesc;
+							}
+							$query = $query . ";";
 						}
 						else{
 							echo "invalid query";
-							//default
+							//default if invalid
 							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 						}
 					}
 					else{
 						//default
 						$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
-						//echo "no query entered";
 					}
 					
 
@@ -95,17 +120,10 @@ border: 1px solid black;
 					echo "<div><table>";
 
 					displayData($query);
-					/* keep this around for now, Ross needs the reference
-					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
-						echo("selecting all");
-					//otherwise, break on the correct query selection and display
-					else:
-						echo($_GET['queryVal']);
-					endif;
-					*/
 
 
-					//TODO add pokemon type to the table
+
+					//TODO add pokemon type to the table? remove pokedex number from table?
 
 					
 					//TODO organize the table so it just fills the screen and nothing more
