@@ -46,19 +46,55 @@ border: 1px solid black;
 					
 
 					//TODO fix the formatting of the search bar, it looks terrible
-
-				 	//TODO fix forms to require regular expressions that match the format of <, >, <=, >=, or = for numberic values
-					// 		followed by a number. this can be used for modular sql statements
-					
 					echo
 						'<form>
 						<label for="queryVal">search:</label>
 						<input type="text" id="queryVal" name="queryVal"><br>
 						</form>'; 
 
+
+					//regex to check against
+					$allowable = "/[hp|attack|defense|sp. attack|sp. defense|speed|total][<|>|<=|>=|=][0-9]*/";
+					//if a query is there
+					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
+						// and it is allowable
+						if(preg_match($allowable, $_GET['queryVal'])){
+							//print it
+							echo $_GET['queryVal'];
+							//reformat it to be searchable based on database schema
+
+							//TODO, this always matches on special attack. that needs fixing.
+							$userQuery = $_GET['queryVal'];
+							if(preg_match("/[special attack][.]*/", $userQuery)){
+								echo "first?";
+								$userQuery = preg_replace("/[special attack]/", "special_attack", $userQuery);
+							}
+							elseif(preg_match("/[special defense][.]*/", $userQuery)){
+								$userQuery = preg_replace("/[special defense]/", "special_dfense", $userQuery);
+							}
+							elseif(preg_match("/[total][.]*/", $userQuery)){
+								$userQuery = preg_replace("/[total]/", "total_points", $userQuery);
+							}
+							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name where " . $userQuery . ";";
+							echo $userQuery;
+						}
+						else{
+							echo "invalid query";
+							//default
+							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						}
+					}
+					else{
+						//default
+						$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						//echo "no query entered";
+					}
+					
+
 					// format as table
 					echo "<div><table>";
 
+					displayData($query);
 					/* keep this around for now, Ross needs the reference
 					if(!isset($_GET['queryVal']) || "" == $_GET['queryVal']):
 						echo("selecting all");
@@ -68,25 +104,10 @@ border: 1px solid black;
 					endif;
 					*/
 
-					
-					//TODO fill in more (modular) queries
 
 					//TODO add pokemon type to the table
 
-
-					////////////////////////this is placeholder. typing abc into name query box adjusts the query
-					//default, loads all values and displays them
-					if(!isset($_GET['nameQuery']) || "" == $_GET['nameQuery']):
-						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;");
-					//otherwise, break on the correct query selection and display
-					elseif (preg_match("/abc/", $_GET['nameQuery'])):
-						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name WHERE total_points>590 ORDER BY total_points;");
-					else:
-						displayData("SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;");
-					endif;
-
-
-
+					
 					//TODO organize the table so it just fills the screen and nothing more
 					function displayData($sqlquery){
 						//establish connection
@@ -123,7 +144,7 @@ border: 1px solid black;
 						//speed
 						echo "<td align='center' style='font-size:25px'>speed</td>";
 						//total
-						echo "<td align='center' style='font-size:25px'>total stats</td>";
+						echo "<td align='center' style='font-size:25px'>total</td>";
 						//legendary
 						echo "<td align='center' style='font-size:25px'>legendary</td>";
 
