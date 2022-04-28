@@ -43,7 +43,10 @@ border: 1px solid black;
 			<main>
 					<h1>
 					<?php
-					
+					//TODO - add egg stuff as other tab on site once table format is pretty enough
+					//TODO - add effectivness stuff as other tab on site once table is pretty enough
+
+
 
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
 					echo
@@ -55,6 +58,7 @@ border: 1px solid black;
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
 					//TODO allow searching by pokemon name, and legendary status
+					//TODO show how many results each search brings up
 					//regex validates input
 					$allowable = 
 // (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
@@ -96,7 +100,7 @@ border: 1px solid black;
 							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
 							//if it was more than just asc or desc
 							if($startsearch != 0){
-								$query = $query . "where " . $userQuery;
+								$query = $query . "WHERE " . $userQuery;
 							}
 							//if there was an asc or desc part
 							if($ascORdesc != ""){
@@ -123,7 +127,9 @@ border: 1px solid black;
 
 
 
-					//TODO add pokemon type to the table? remove pokedex number from table?
+					//TODO add pokemon type to the table, ad abbilities to the table 
+					
+					//TODO MAYBE: depending on space, remove pokedex number from table?
 
 					
 					//TODO organize the table so it just fills the screen and nothing more
@@ -143,6 +149,7 @@ border: 1px solid black;
 						$result = $conn->query($sqlquery);
 
 
+						//TODO make all the columns that have stats fill the same size on the table
 						//display all headers
 						echo "<tr>";
 						//name
@@ -150,7 +157,7 @@ border: 1px solid black;
 						//dex
 						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
 						//hp
-						echo "<td align='center' style='font-size:25px'>hit points</td>";
+						echo "<td align='center' style='font-size:25px'>hp</td>";
 						//attack
 						echo "<td align='center' style='font-size:25px'>attack</td>";
 						//defense
@@ -167,8 +174,6 @@ border: 1px solid black;
 						echo "<td align='center' style='font-size:25px'>legendary</td>";
 
 						echo "</tr>\n";
-						
-						//TODO add in check for empty data
 
 						//TODO make every other row of the table a different shade
 
