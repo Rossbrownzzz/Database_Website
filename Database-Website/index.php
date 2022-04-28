@@ -61,8 +61,8 @@ border: 1px solid black;
 					//TODO show how many results each search 
 					//regex validates input
 					$allowable = 
-// (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
-"/(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
+//	name only		 (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
+"/(([a-z]|[A-Z])+)|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
@@ -97,9 +97,16 @@ border: 1px solid black;
 							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
 
 							//construct the query based on search values
-							$query = "SELECT pokedex_number, stats.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
-							//if it was more than just asc or desc
-							if($startsearch != 0){
+							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
+							
+							//search by name
+							if(preg_match("/([a-z]|[A-Z])+/", $userQuery))
+							{
+								$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+							}
+							
+							//if it was more than just asc or desc, and not search by name
+							if(($startsearch != 0) && (!preg_match("/([a-z]|[A-Z])+/", $userQuery))){
 								$query = $query . "WHERE " . $userQuery;
 							}
 							//if there was an asc or desc part
@@ -111,12 +118,12 @@ border: 1px solid black;
 						else{
 							echo "invalid query";
 							//default if invalid
-							$query = "SELECT pokedex_number, stats.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 						}
 					}
 					else{
 						//default
-						$query = "SELECT pokedex_number, stats.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 					}
 					
 
