@@ -62,7 +62,7 @@ border: 1px solid black;
 					//regex validates input
 					$allowable = 
 //	name only		 (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
-"/(([a-z]|[A-Z])+)|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
+"/(([a-z]|[A-Z]|'|(|)|-)+)|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
@@ -100,7 +100,7 @@ border: 1px solid black;
 							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
 							
 							//search by name
-							if(preg_match("/([a-z]|[A-Z])+/", $userQuery))
+							if(preg_match("/([a-z]|[A-Z]|'|(|)|-)+/", $userQuery))
 							{
 								$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
 							}
