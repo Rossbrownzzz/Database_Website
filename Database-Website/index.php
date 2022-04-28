@@ -62,7 +62,7 @@ border: 1px solid black;
 					//regex validates input
 					$allowable = 
 // (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
-"/(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,)*)+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
+"/(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
@@ -97,7 +97,7 @@ border: 1px solid black;
 							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
 
 							//construct the query based on search values
-							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
+							$query = "SELECT pokedex_number, stats.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
 							//if it was more than just asc or desc
 							if($startsearch != 0){
 								$query = $query . "WHERE " . $userQuery;
@@ -111,12 +111,12 @@ border: 1px solid black;
 						else{
 							echo "invalid query";
 							//default if invalid
-							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+							$query = "SELECT pokedex_number, stats.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 						}
 					}
 					else{
 						//default
-						$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						$query = "SELECT pokedex_number, stats.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 					}
 					
 
@@ -149,14 +149,13 @@ border: 1px solid black;
 						$result = $conn->query($sqlquery);
 
 
-						//TODO make pokedex # the first one since it's an index
 						//TODO make all the columns that have stats fill the same size on the table
 						//display all headers
 						echo "<tr>";
-						//name
-						echo "<td align='center' style='font-size:25px'>Name</td>";
 						//dex
 						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
+						//name
+						echo "<td align='center' style='font-size:25px'>Name</td>";
 						//hp
 						echo "<td align='center' style='font-size:25px'>hp</td>";
 						//attack
@@ -181,8 +180,8 @@ border: 1px solid black;
 						//display all values
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
-							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[hp]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[attack]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[defense]</td>";
