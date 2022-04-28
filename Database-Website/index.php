@@ -58,7 +58,7 @@ border: 1px solid black;
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
 					//TODO allow searching by pokemon name, and legendary status
-					//TODO show how many results each search brings up
+					//TODO show how many results each search 
 					//regex validates input
 					$allowable = 
 // (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
@@ -149,6 +149,7 @@ border: 1px solid black;
 						$result = $conn->query($sqlquery);
 
 
+						//TODO make pokedex # the first one since it's an index
 						//TODO make all the columns that have stats fill the same size on the table
 						//display all headers
 						echo "<tr>";
