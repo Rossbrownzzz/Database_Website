@@ -111,7 +111,12 @@ table {
 							//search by name (ie, no asc, desc or >, < or =)
 							if(!preg_match("/(asc)|(desc)|>|<|=/", $userQuery))
 							{
-								$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+								if(!preg_match("/(legendary)|(none)|(sub-legendary)|(mythical)/", $userQuery)){
+									$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+								}
+								else{
+									$query = $query . "WHERE legendary_status = \"" . $userQuery . "\"";
+								}
 							}
 							
 							//if it was more than just asc or desc, and not search by name
