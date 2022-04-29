@@ -43,7 +43,7 @@ main {
 						<a class="nav-link" href="#">Battle Stats</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="typematchups.html">Type Matchups</a>
+						<a class="nav-link" href="typematchups.php">Type Matchups</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="eggData.php">Egg Data</a>
