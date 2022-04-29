@@ -3,18 +3,15 @@
 td {
 border: 1px solid black;
 }
+
 table tr:nth-child(odd) {
     background-color: #ccc;
 }
 table {
-	margin-left: auto;
-	margin-right: auto;
-}
-main {
-	padding-bottom: 25px;
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
-
 
 <html lang="en">
 	<head>
@@ -28,7 +25,7 @@ main {
 		
 	<body>
 		<header>
-			<h1>Pokemon Battle Stats</h1>
+			<h1>Pokemon</h1>
 		</header>
 		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 			<a class="navbar-brand" href="#">
@@ -40,13 +37,7 @@ main {
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav">
 					<li class="nav-item active">
-						<a class="nav-link" href="#">Battle Stats</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="typematchups.php">Type Matchups</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="eggData.php">Egg Data</a>
+						<a class="nav-link" href="#">Home</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="teambuilder.html">Team Builder</a>
@@ -60,26 +51,23 @@ main {
 			<main>
 					<h1>
 					<?php
-					//TODO - add egg stuff as other tab on site once table format is pretty enough
-					//TODO - add effectivness stuff as other tab on site once table is pretty enough
-
-
 
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
 					echo
 						'<form>
-						<label for="queryVal">Search:</label>
+						<label for="queryVal">search:</label>
 						<input type="text" id="queryVal" name="queryVal"><br>
 						</form>'; 
 
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
-					//TODO allow searching by pokemon name, and legendary status
+
 					//TODO show how many results each search 
+
 					//regex validates input
 					$allowable = 
-// (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
-"/(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,)*)+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
+//	name only		 (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
+"/(([a-z]|[A-Z]|'|(|)|-)+)|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
@@ -114,9 +102,21 @@ main {
 							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
 
 							//construct the query based on search values
-							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
-							//if it was more than just asc or desc
-							if($startsearch != 0){
+							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
+							
+							//search by name (ie, no asc, desc or >, < or =)
+							if(!preg_match("/(asc)|(desc)|>|<|=/", $userQuery))
+							{
+								if(!preg_match("/(legendary)|(none)|(sub-legendary)|(mythical)/", $userQuery)){
+									$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+								}
+								else{
+									$query = $query . "WHERE legendary_status = \"" . $userQuery . "\"";
+								}
+							}
+							
+							//if it was more than just asc or desc, and not search by name
+							if(($startsearch != 0) && (preg_match("/<|>|=/", $userQuery))){
 								$query = $query . "WHERE " . $userQuery;
 							}
 							//if there was an asc or desc part
@@ -124,16 +124,17 @@ main {
 								$query = $query . " ORDER BY " . strrev($holdbackwards) . $ascORdesc;
 							}
 							$query = $query . ";";
+
 						}
 						else{
 							echo "invalid query";
 							//default if invalid
-							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 						}
 					}
 					else{
 						//default
-						$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
 					}
 					
 
@@ -144,12 +145,11 @@ main {
 
 
 
-					//TODO add pokemon type to the table, ad abbilities to the table 
+					//TODO add pokemon type to the table, add abbilities to the table 
 					
 					//TODO MAYBE: depending on space, remove pokedex number from table?
 
 					
-					//TODO organize the table so it just fills the screen and nothing more
 					function displayData($sqlquery){
 						//establish connection
 						$servername = "localhost";
@@ -166,24 +166,23 @@ main {
 						$result = $conn->query($sqlquery);
 
 
-						//TODO make pokedex # the first one since it's an index
-						//TODO make all the columns that have stats fill the same size on the table
+						//TODO make a small space between word starts/ends and the column barrier
 						//display all headers
 						echo "<tr>";
-						//name
-						echo "<td align='center' style='font-size:25px'>Name</td>";
 						//dex
 						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
+						//name
+						echo "<td align='center' style='font-size:25px'>Name</td>";
 						//hp
-						echo "<td align='center' style='font-size:25px'>hp</td>";
+						echo "<td align='center' style='font-size:25px'>hit <br>points</td>";
 						//attack
 						echo "<td align='center' style='font-size:25px'>attack</td>";
 						//defense
 						echo "<td align='center' style='font-size:25px'>defense</td>";
 						//sp attack
-						echo "<td align='center' style='font-size:25px'>sp. attack</td>";
+						echo "<td align='center' style='font-size:25px'>sp. <br>attack</td>";
 						//sp def
-						echo "<td align='center' style='font-size:25px'>sp. defense</td>";
+						echo "<td align='center' style='font-size:25px'>sp. <br>defense</td>";
 						//speed
 						echo "<td align='center' style='font-size:25px'>speed</td>";
 						//total
@@ -193,13 +192,11 @@ main {
 
 						echo "</tr>\n";
 
-						//TODO make every other row of the table a different shade
-
 						//display all values
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
-							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[hp]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[attack]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[defense]</td>";

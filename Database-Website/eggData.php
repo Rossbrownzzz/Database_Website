@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<style>
+td {
+border: 1px solid black;
+}
+table tr:nth-child(odd) {
+    background-color: #ccc;
+}
+table {
+	margin-left: auto;
+	margin-right: auto;
+}
+main {
+	padding-bottom: 25px;
+}
+</style>
+
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -42,9 +58,6 @@
 		<main>
 					<h1>
 					<?php
-					//TODO - add egg stuff as other tab on site once table format is pretty enough
-					//TODO - add effectivness stuff as other tab on site once table is pretty enough
-
 
 
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
@@ -56,8 +69,7 @@
 
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
-					//TODO allow searching by pokemon name, and legendary status
-					//TODO show how many results each search 
+					//TODO allow searching - only by name or egg type for this page.
 					//regex validates input
 					$allowable = 
 // (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
@@ -69,16 +81,17 @@
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
 							echo $userQuery;
+							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
 						}
 						else{
 							echo "invalid query";
 							//default if invalid
-							$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
 						}
 					}
 					else{
 						//default
-						$query = "SELECT stats.name, pokedex_number, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
 					}
 					
 
@@ -88,12 +101,6 @@
 					displayData($query);
 
 
-
-					//TODO add pokemon type to the table, ad abbilities to the table 
-					
-					//TODO MAYBE: depending on space, remove pokedex number from table?
-
-					
 					//TODO organize the table so it just fills the screen and nothing more
 					function displayData($sqlquery){
 						//establish connection
@@ -110,49 +117,27 @@
 						//query the bale
 						$result = $conn->query($sqlquery);
 
-
-						//TODO make pokedex # the first one since it's an index
-						//TODO make all the columns that have stats fill the same size on the table
 						//display all headers
 						echo "<tr>";
 						//name
-						echo "<td align='center' style='font-size:25px'>Name</td>";
-						//dex
 						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
-						//hp
-						echo "<td align='center' style='font-size:25px'>hp</td>";
-						//attack
-						echo "<td align='center' style='font-size:25px'>attack</td>";
-						//defense
-						echo "<td align='center' style='font-size:25px'>defense</td>";
-						//sp attack
-						echo "<td align='center' style='font-size:25px'>sp. attack</td>";
-						//sp def
-						echo "<td align='center' style='font-size:25px'>sp. defense</td>";
-						//speed
-						echo "<td align='center' style='font-size:25px'>speed</td>";
-						//total
-						echo "<td align='center' style='font-size:25px'>total</td>";
-						//legendary
-						echo "<td align='center' style='font-size:25px'>legendary</td>";
+						echo "<td align='center' style='font-size:25px'>name</td>";
+						echo "<td align='center' style='font-size:25px'>percent <br> male</td>";
+						echo "<td align='center' style='font-size:25px'>egg <br> cycles</td>";
+						echo "<td align='center' style='font-size:25px'>egg <br> type</td>";
+		
 
 						echo "</tr>\n";
 
-						//TODO make every other row of the table a different shade
 
 						//display all values
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
-							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
 							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[hp]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[attack]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[defense]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[special_attack]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[special_defense]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[speed]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[total_points]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[legendary_status]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[percentage_male]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[egg_cycles]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[egg_pokemonType]</td>";
 							echo "</tr>\n";
 							}
 						echo "</table></div>";
