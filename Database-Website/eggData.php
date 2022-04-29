@@ -71,11 +71,8 @@ main {
 
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
-					//TODO allow searching - only by name or egg type for this page.
 					//regex validates input
-					$allowable = 
-// (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
-"/.*/";
+					$allowable = "/([a-z]|[A-Z]|'|(|)|-| )+/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
@@ -83,7 +80,15 @@ main {
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
 							echo $userQuery;
-							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
+							//base query
+							$query = $query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name";
+
+							if (preg_match("/((g|G)rass)|((m|M)onster)|((d|D)ragon)|((w|W)ater 1)|((b|B)ug)|((f|F)lying)|((f|F)ield)|((f|F)airy)|((u|U)ndiscovered)|((h|H)uman-like)|((w|W)ater 3)|((m|M)ineral)|((a|A)morphous)|((w|W)ater 2)|((d|D)itto)/", $_GET['queryVal'])){
+								$query = $query . " WHERE egg_pokemonType LIKE \"%" . $userQuery . "%\";";
+							}
+							else{
+								$query = $query . " WHERE pokemon.name LIKE \"%" . $userQuery . "%\";";
+							}
 						}
 						else{
 							echo "invalid query";
@@ -103,7 +108,6 @@ main {
 					displayData($query);
 
 
-					//TODO organize the table so it just fills the screen and nothing more
 					function displayData($sqlquery){
 						//establish connection
 						$servername = "localhost";
