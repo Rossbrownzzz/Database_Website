@@ -21,11 +21,11 @@
 			</button>
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav">
-					<li class="nav-item active">
+					<li class="nav-item">
 						<a class="nav-link" href= "index.php">Battle Stats</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="typematchups.html">Type Matchups</a>
+						<a class="nav-link" href="typematchups.php">Type Matchups</a>
 					</li>
 					<li class="nav-item active">
 						<a class="nav-link" href="#">Egg Data</a>

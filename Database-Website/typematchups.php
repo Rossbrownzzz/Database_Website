@@ -28,7 +28,7 @@
                         <a class="nav-link" href="#">Type Matchups</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="eggData.html">Egg Data</a>
+                        <a class="nav-link" href="eggData.php">Egg Data</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="teambuilder.html">Team Builder</a>
