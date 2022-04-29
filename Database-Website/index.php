@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <style>
+form {     padding-top: 25px;     padding-bottom: 25px; }
+
 td {
 border: 1px solid black;
 }
@@ -65,11 +67,13 @@ table {
 						<input type="text" id="queryVal" name="queryVal"><br>
 						</form>'; 
 
+
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
 
 					//TODO show how many results each search 
 
+					//bug in total points asc or desc
 					//regex validates input
 					$allowable = 
 //	name only		 (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
@@ -160,7 +164,7 @@ table {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "ihatemiami7!";
+						$password = "workplaceready";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
@@ -199,6 +203,7 @@ table {
 						echo "</tr>\n";
 
 						//display all values
+						//TODO add radio buttons with the id and name matching the name of the pokemon.
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
 							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
