@@ -3,18 +3,11 @@
 td {
 border: 1px solid black;
 }
-table tr:nth-child(odd) {
-    background-color: #ccc;
-}
-table {
-	margin-left: auto;
-	margin-right: auto;
-}
-main {
-	padding-bottom: 25px;
+h1 {
+	padding-left: 50 px;
+	padding-right: 50px;
 }
 </style>
-
 
 <html lang="en">
 	<head>
@@ -28,7 +21,7 @@ main {
 		
 	<body>
 		<header>
-			<h1>Pokemon Battle Stats</h1>
+			<h1>Pokemon</h1>
 		</header>
 		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 			<a class="navbar-brand" href="#">
@@ -40,13 +33,7 @@ main {
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav">
 					<li class="nav-item active">
-						<a class="nav-link" href="#">Battle Stats</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="typematchups.html">Type Matchups</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="eggData.html">Egg Data</a>
+						<a class="nav-link" href="#">Home</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="teambuilder.html">Team Builder</a>
@@ -68,7 +55,7 @@ main {
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
 					echo
 						'<form>
-						<label for="queryVal">Search:</label>
+						<label for="queryVal">search:</label>
 						<input type="text" id="queryVal" name="queryVal"><br>
 						</form>'; 
 

@@ -8,10 +8,10 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 			<title>Mr.Bengal'sTeam</title>
 	</head>
-
+	
 	<body>
 		<header>
-			<h1>Team Builder</h1>
+			<h1>Pokemon Egg Data</h1>
 		</header>
 		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
 			<a class="navbar-brand" href="#">
@@ -21,17 +21,17 @@
 			</button>
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
 				<ul class="navbar-nav">
-					<li class="nav-item">
-						<a class="nav-link" href="index.php">Battle Stats</a>
+					<li class="nav-item active">
+						<a class="nav-link" href= "index.php">Battle Stats</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="typematchups.html">Type Matchups</a>
 					</li>
-					<li class="nav-item">
-                        <a class="nav-link" href="eggData.html">Egg Data</a>
-                    </li>
 					<li class="nav-item active">
-						<a class="nav-link" href="#">Team Builder</a>
+						<a class="nav-link" href="#">Egg Data</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="teambuilder.html">Team Builder</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="creators.html">Creators</a>
@@ -39,6 +39,7 @@
 				</ul>
 			</div>
 		</nav>
-		<h2>Welcome to our Pokemon Teambuilder</h2>
+		<h2>Egg Data</h2>
 	</body>
 </html>
+
