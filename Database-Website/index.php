@@ -35,16 +35,22 @@ table {
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="collapsibleNavbar">
-				<ul class="navbar-nav">
-					<li class="nav-item active">
-						<a class="nav-link" href="#">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="teambuilder.html">Team Builder</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="creators.html">Creators</a>
-					</li>
+			<ul class="navbar-nav active">
+                    <li class="nav-item active">
+						<a class="nav-link" href="#">Battle Stats</a>
+                    </li>
+                    <li class="nav-item">
+						<a class="nav-link" href="typematchups.php">Type Matchups</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="eggData.php">Egg Data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="teambuilder.html">Team Builder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="creators.html">Creators</a>
+                    </li>
 				</ul>
 			</div>
 		</nav>
@@ -55,7 +61,7 @@ table {
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
 					echo
 						'<form>
-						<label for="queryVal">search:</label>
+						<label for="queryVal">Search:</label>
 						<input type="text" id="queryVal" name="queryVal"><br>
 						</form>'; 
 
@@ -154,7 +160,7 @@ table {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "workplaceready";
+						$password = "ihatemiami7!";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
