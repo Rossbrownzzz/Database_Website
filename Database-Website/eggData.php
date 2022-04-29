@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <style>
+form {     padding-top: 25px;     padding-bottom: 25px; }
+
 td {
 border: 1px solid black;
 }
@@ -106,7 +108,7 @@ main {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "ihatemiami7!";
+						$password = "workplaceready";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
