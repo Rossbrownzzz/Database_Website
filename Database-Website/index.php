@@ -9,6 +9,9 @@ border: 1px solid black;
 table tr:nth-child(odd) {
     background-color: #ccc;
 }
+table tr:first-child {
+	background-color: #a1a1a1;
+}
 table {
     margin-left: auto;
     margin-right: auto;
