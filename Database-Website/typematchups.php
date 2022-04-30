@@ -10,7 +10,7 @@ table tr:nth-child(odd) {
     background-color: #ccc;
 }
 table tr:first-child {
-	background-color: #a1a1a1;
+	background-color: #9fc5e8;
 }
 table {
     margin-left: auto;
@@ -65,6 +65,8 @@ table {
 
 
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
+					//TODO the userquery is actually just in the wrong spot on this page too. fix that
+
 					echo
 						'<form>
 						<label for="queryVal">Search:</label>
@@ -73,11 +75,10 @@ table {
 
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 
-					//TODO allow searching - only by name or egg type for this page.
 					//regex validates input
-
                     $allowable = 
-"/.*/";
+"/^(((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater)){1}$/";
+//((,| , | ,|, )((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater)){0,1}/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
@@ -85,28 +86,101 @@ table {
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
 							echo $userQuery;
-							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
+							//if only one type
+							if (preg_match("/^(((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater)){1}$/", $userQuery)){
+								$offWeak = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery . " =0.5;";
+								$offStrong = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery . " =2;";
+								$defQuery = "SELECT * from effectiveness where pokemonpokemonType = \"" . $userQuery . "\";";
+								displayDataType($defQuery, $offWeak, $offStrong, 1);
+							}
+							/*
+							else{
+								$userQuery1 = preg_replace("/(( , | ,|, |,)((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater))$/", "" ,$userQuery);
+								$userQuery2 = preg_replace("/^(((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater))( , | ,|, |,)/", "" ,$userQuery);
+								$offWeak1 = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery1 . " =0.5;";
+								$offStrong1 = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery1 . " =2;";
+								$defQuery1 = "SELECT * from effectiveness where pokemonpokemonType = \"" . $userQuery1 . "\";";
+								$offWeak2 = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery2 . " =0.5;";
+								$offStrong2 = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery2 . " =2;";
+								$defQuery2 = "SELECT * from effectiveness where pokemonpokemonType = \"" . $userQuery2 . "\";";
+								displayDataTypeTwo($defQuery1, $offWeak1, $offStrong1, $defQuery2, $offWeak2, $offStrong2);
+							}
+							*/
 						}
 						else{
 							echo "invalid query";
-							//default if invalid
-							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
+							displayDataType(0,0,0,0);
 						}
 					}
 					else{
-						//default
-						$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
+						displayDataType(0,0,0,0);
 					}
 					
 
-					// format as table
-					echo "<div><table>";
+						// format as table
+						function displayDataType($defQuery, $offWeak, $offStrong, $withData){
 
-					displayData($query);
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>defensively <br> weak to</td>";
+						if ($withData ==1){
+							displayDataDef($defQuery, 2);
+						}
+						echo'</tr></table></div>';
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>defensively <br> resistant to</td>";
+						if ($withData ==1){
+							displayDataDef($defQuery, 0.5);
+						}
+						echo '</tr></table></div>';
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>offensively <br> weak against</td>";
+						if ($withData ==1){
+							displayDataOff($offWeak);
+						}
+						echo'</tr></table></div>';
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>offensively <br> strong against</td>";
+						if ($withData ==1){
+							displayDataOff($offStrong);
+						}
+						echo '</tr></table></div>';
+						}
 
 
-					//TODO organize the table so it just fills the screen and nothing more
-					function displayData($sqlquery){
+/*
+						function displayDataTypeTwo($defQuery1, $offWeak1, $offStrong1, $defQuery2, $offWeak2, $offStrong2){
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>defensively <br> weak to</td>";
+						displayDataDef($defQuery1, 2);
+						displayDataDef($defQuery2, 2);
+						echo'</tr></table></div>';
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>defensively <br> resistant to</td>";
+						displayDataDef($defQuery1, 0.5);
+						displayDataDef($defQuery2, 0.5);
+						echo '</tr></table></div>';
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>offensively <br> weak against</td>";
+						displayDataOff($offWeak1);
+						displayDataOff($offWeak2);
+						echo'</tr></table></div>';
+
+						echo '<div style="float: left;margin-right:10px"><table><tr>';
+						echo "<td align='center' style='font-size:25px'>offensively <br> strong against</td>";
+						displayDataOff($offStrong1);
+						displayDataOff($offStrong2);
+						echo '</tr></table></div>';
+						}
+
+						*/
+
+						function displayDataOff($sqlquery){
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
@@ -121,32 +195,56 @@ table {
 						//query the bale
 						$result = $conn->query($sqlquery);
 
-						//display all headers
-						echo "<tr>";
-						//name
-						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
-						echo "<td align='center' style='font-size:25px'>name</td>";
-						echo "<td align='center' style='font-size:25px'>percent <br> male</td>";
-						echo "<td align='center' style='font-size:25px'>egg <br> cycles</td>";
-						echo "<td align='center' style='font-size:25px'>egg <br> type</td>";
-		
-
-						echo "</tr>\n";
-
-
 						//display all values
 						while($row = $result->fetch_assoc()) {
 							echo "<tr>";
-							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[percentage_male]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[egg_cycles]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[egg_pokemonType]</td>";
+							echo "<td align='center' style='font-size:25px'>$row[pokemonpokemonType]</td>";
 							echo "</tr>\n";
 							}
-						echo "</table></div>";
 						$conn->close();
 					}
+
+
+
+					function displayDataDef($sqlquery, $two){
+						//establish connection
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the bale
+						$result = $conn->query($sqlquery);
+
+						//display all values
+						while($row = $result->fetch_assoc()) {
+							if($row['against_normal']==$two){echo "<tr><td align='center' style='font-size:25px'>normal</td></tr>\n";}
+							if($row['against_fire']==$two){echo "<tr><td align='center' style='font-size:25px'>fire</td></tr>\n";}
+							if($row['against_water']==$two){echo "<tr><td align='center' style='font-size:25px'>water</td></tr>\n";}
+							if($row['against_electric']==$two){echo "<tr><td align='center' style='font-size:25px'>electric</td></tr>\n";}
+							if($row['against_grass']==$two){echo "<tr><td align='center' style='font-size:25px'>grass</td></tr>\n";}
+							if($row['against_ice']==$two){echo "<tr><td align='center' style='font-size:25px'>ice</td></tr>\n";}
+							if($row['against_fight']==$two){echo "<tr><td align='center' style='font-size:25px'>fighting</td></tr>\n";}
+							if($row['against_poison']==$two){echo "<tr><td align='center' style='font-size:25px'>poison</td></tr>\n";}
+							if($row['against_ground']==$two){echo "<tr><td align='center' style='font-size:25px'>ground</td></tr>\n";}
+							if($row['against_flying']==$two){echo "<tr><td align='center' style='font-size:25px'>flying</td></tr>\n";}
+							if($row['against_psychic']==$two){echo "<tr><td align='center' style='font-size:25px'>psychic</td></tr>\n";}
+							if($row['against_bug']==$two){echo "<tr><td align='center' style='font-size:25px'>bug</td></tr>\n";}
+							if($row['against_rock']==$two){echo "<tr><td align='center' style='font-size:25px'>rock</td></tr>\n";}
+							if($row['against_ghost']==$two){echo "<tr><td align='center' style='font-size:25px'>ghost</td></tr>\n";}
+							if($row['against_dragon']==$two){echo "<tr><td align='center' style='font-size:25px'>dragon</td></tr>\n";}
+							if($row['against_dark']==$two){echo "<tr><td align='center' style='font-size:25px'>dark</td></tr>\n";}
+							if($row['against_steel']==$two){echo "<tr><td align='center' style='font-size:25px'>steel</td></tr>\n";}
+							if($row['against_fairy']==$two){echo "<tr><td align='center' style='font-size:25px'>fairy</td></tr>\n";}
+							}
+						$conn->close();
+					}
+
 
 					?>
 					</h1>
