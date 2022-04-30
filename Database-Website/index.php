@@ -131,7 +131,7 @@ $allowStatAndAsc=
 							}
 
 							//do final formatting now that order is sorted
-							$userQuery = preg_replace("/(,| , | ,|, )(hp|hit points|attack|defense|sp\. attack|special attack|sp\. defense|special defense|speed|total) (asc|desc)/", "", $userQuery);
+							$userQuery = preg_replace("/(,| , | ,|, )(hp|hit points|attack|defense|sp\. attack|special attack|sp\. defense|special defense|speed|total|total_points|special_attack|special_defense) (asc|desc)/", "", $userQuery);
 							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
 
 							//construct the query based on search values
