@@ -10,7 +10,7 @@ table tr:nth-child(odd) {
     background-color: #ccc;
 }
 table tr:first-child {
-	background-color: #a1a1a1;
+	background-color: #9fc5e8;
 }
 table {
     margin-left: auto;
@@ -80,11 +80,30 @@ table {
 					//regex validates input
 					$allowable = 
 //	name only		 (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
-"/(([a-z]|[A-Z]|'|(|)|-)+)|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})+((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total){1}( asc| desc){1}){0,1})|(((^hp|^hit points|^attack|^defense|^sp\. attack|^special attack|^sp\. defense|^special defense|^speed|^total)( asc| desc)){1})/";
+"/(([a-z]|[A-Z]|\'|\(|\)|\-)+)$|(((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total)){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total)){1}(( asc)|( desc)){1}){0,1})|(((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total))(( asc)|( desc))){1})/";
+
+$allowNameSearch=
+"/^(([a-z]|[A-Z]|\'|\(|\)|\-)+)$/";
+$allowSingleStatSearch=
+"/^(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+)$/";
+$allowManyStatSearch=
+"/^((((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+( , |, | , |,){1})+)(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+)$/";
+$allowAscOrDescSearch=
+"/^(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(( asc)|( desc)))$/";
+$allowSingleStatAndOrder=
+"/^(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+( , |, | ,|,){1}){1}(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(( asc)|( desc)){1})$/";
+$allowStatAndAsc=
+"/^((((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+( , | ,|, |,){1})+)(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(( asc)|( desc)){1})$/";
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
 						// and it is allowable
-						if (preg_match($allowable, $_GET['queryVal'])){
+						if (preg_match($allowNameSearch, $_GET['queryVal'])
+						||preg_match($allowSingleStatSearch, $_GET['queryVal'])
+						||preg_match($allowManyStatSearch, $_GET['queryVal'])
+						||preg_match($allowAscOrDescSearch, $_GET['queryVal'])
+						||preg_match($allowSingleStatAndOrder, $_GET['queryVal'])
+						||preg_match($allowStatAndAsc, $_GET['queryVal'])
+						){//if (preg_match($allowable, $_GET['queryVal'])){
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
 							echo $userQuery;
@@ -105,7 +124,8 @@ table {
 								$startsearch = strpos($userQuery, "desc");
 								$ascORdesc = "desc";
 							}
-							while(($startsearch > 0) & ($userQuery[$startsearch-1] != ",")){
+							//
+							while(($startsearch > 0) && ($userQuery[$startsearch-1] != ",")){
 								$holdbackwards = $holdbackwards . $userQuery[$startsearch-1];
 								$startsearch = $startsearch - 1;
 							}
