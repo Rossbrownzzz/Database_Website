@@ -9,7 +9,7 @@ table tr:nth-child(odd) {
     background-color: #ccc;
 }
 table tr:first-child {
-	background-color: #a1a1a1;
+	background-color: #9fc5e8;
 }
 table {
 	margin-left: auto;
