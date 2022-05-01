@@ -148,11 +148,11 @@ $allowStatAndAsc=
 							{
 								//if they were searching name
 								if(!preg_match("/(legendary)|(none)|(sub-legendary)|(mythical)/", $userQuery)){
-									$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+									$query = $query . " WHERE stats.name LIKE \"%" . $userQuery . "%\"";
 								}
 								//if they were searching by legendary status
 								else{
-									$query = $query . "WHERE legendary_status = \"" . $userQuery . "\"";
+									$query = $query . " WHERE legendary_status = \"" . $userQuery . "\"";
 								}
 							}
 							
@@ -194,7 +194,7 @@ $allowStatAndAsc=
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "ihatemiami7!";
+						$password = "workplaceready";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
