@@ -70,7 +70,7 @@ table {
 
 
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
-					$allowNameSearch = "/^(([a-z]|[A-Z]|\'|\(|\)|\-)+)$/";
+					$allowNameSearch = "/^(([a-z]|[A-Z]|\'|\(|\)|\-| )+)$/";
 
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){

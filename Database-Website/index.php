@@ -82,7 +82,7 @@ table {
 "/(([a-z]|[A-Z]|\'|\(|\)|\-)+)$|(((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total)){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total)){1}(( asc)|( desc)){1}){0,1})|(((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total))(( asc)|( desc))){1})/";
 
 $allowNameSearch=
-"/^(([a-z]|[A-Z]|\'|\(|\)|\-)+)$/";
+"/^(([a-z]|[A-Z]|\'|\(|\)|\-| )+)$/";
 $allowSingleStatSearch=
 "/^(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+)$/";
 $allowManyStatSearch=
@@ -142,11 +142,11 @@ $allowStatAndAsc=
 							{
 								//if they were searching name
 								if(!preg_match("/(legendary)|(none)|(sub-legendary)|(mythical)/", $userQuery)){
-									$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+									$query = $query . " WHERE stats.name LIKE \"%" . $userQuery . "%\"";
 								}
 								//if they were searching by legendary status
 								else{
-									$query = $query . "WHERE legendary_status = \"" . $userQuery . "\"";
+									$query = $query . " WHERE legendary_status = \"" . $userQuery . "\"";
 								}
 							}
 							
