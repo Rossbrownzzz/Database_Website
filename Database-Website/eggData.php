@@ -52,7 +52,7 @@ main {
 						<a class="nav-link" href="#">Egg Data</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="teambuilder.html">Team Builder</a>
+						<a class="nav-link" href="teambuilder.php">Team Builder</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="creators.html">Creators</a>

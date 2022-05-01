@@ -51,7 +51,7 @@ table {
                         <a class="nav-link" href="eggData.php">Egg Data</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="teambuilder.html">Team Builder</a>
+                        <a class="nav-link" href="teambuilder.php">Team Builder</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="creators.html">Creators</a>
@@ -103,7 +103,8 @@ $allowStatAndAsc=
 						||preg_match($allowAscOrDescSearch, $_GET['queryVal'])
 						||preg_match($allowSingleStatAndOrder, $_GET['queryVal'])
 						||preg_match($allowStatAndAsc, $_GET['queryVal'])
-						){//if (preg_match($allowable, $_GET['queryVal'])){
+						){
+							// accept the query
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
 							echo $userQuery;
@@ -134,15 +135,17 @@ $allowStatAndAsc=
 							$userQuery = preg_replace("/(,| , | ,|, )(hp|hit points|attack|defense|sp\. attack|special attack|sp\. defense|special defense|speed|total|total_points|special_attack|special_defense) (asc|desc)/", "", $userQuery);
 							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
 
-							//construct the query based on search values
+							//construct the base query
 							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status, pokemontype FROM stats JOIN pokemon ON pokemon.name = stats.name JOIN pokemontype ON pokemon.name = pokemontype.name";
 							
-							//search by name (ie, no asc, desc or >, < or =)
+							//search by name (ie, not stats so no asc, desc, >, <, or =)
 							if(!preg_match("/(asc)|(desc)|>|<|=/", $userQuery))
 							{
+								//if they were searching name
 								if(!preg_match("/(legendary)|(none)|(sub-legendary)|(mythical)/", $userQuery)){
 									$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
 								}
+								//if they were searching by legendary status
 								else{
 									$query = $query . "WHERE legendary_status = \"" . $userQuery . "\"";
 								}
@@ -191,11 +194,12 @@ $allowStatAndAsc=
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
+						//ensure connection worked
 						if ($conn->connect_error) {
 							die("Connection failed: " . $conn->connect_error);
 							}
 
-						//query the bale
+						//query the databse
 						$result = $conn->query($sqlquery);
 
 
