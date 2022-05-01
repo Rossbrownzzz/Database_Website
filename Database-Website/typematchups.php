@@ -192,7 +192,7 @@ table {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "ihatemiami7!";
+						$password = "workplaceready";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						

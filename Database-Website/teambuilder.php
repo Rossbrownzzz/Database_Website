@@ -61,6 +61,17 @@ table {
 					<h1>
 					<?php
 
+					//if a button is pressed
+					if(array_key_exists('pokemonAdd',$_POST)){
+						updateTeam($_POST['pokemonAdd']);
+					}
+					if(array_key_exists('deleteTeam',$_POST)){
+						clearTempTeam();
+					}
+
+					//if there is any team, display it
+					getTempTeam();
+
 					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
 					echo
 						'<form>
@@ -69,8 +80,20 @@ table {
 						</form>'; 
 
 
+					
+
 					//TODO add some kind of help popup or page thing that has some basic rules of how to search
 					$allowNameSearch = "/^(([a-z]|[A-Z]|\'|\(|\)|\-| )+)$/";
+
+					//TODO, maybe only allow you to save it if it exists
+					if (isset($_GET['saveTeam']) && "" != $_GET['saveTeam']){
+						if(preg_match($allowNameSearch, $_GET['saveTeam'])){
+							saveTeam($_GET['saveTeam']);
+						}
+						else{
+							echo "your team name contains invalid characters";
+						}
+					}
 
 					//if a query is there
 					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
@@ -100,13 +123,113 @@ table {
 					
 					displayData($query);
 
-
-
-					//TODO add pokemon type to the table, add abbilities to the table 
 					
-					//TODO MAYBE: depending on space, remove pokedex number from table?
 
+
+					/*
+					on any button press, update the temporary team
+					*/
+					function updateTeam($pokemon) {
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						//ensure connection worked
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the databse
+						$conn->query("insert into tempTeam (idx, pokemon) VALUES (1, \"$pokemon\");");
+						
+					}
 					
+					/*
+					display temprorary team
+					*/
+					function getTempTeam() {
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						//ensure connection worked
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the databse
+						$result = $conn->query("SELECT * FROM tempTeam");
+						if ($result->num_rows == 0){}
+						else{
+							echo'<form method="get">
+							  <label for="saveTeam">Save team as:</label>
+							  <input id="saveTeam" type="text" name="saveTeam">
+						  </form>';
+						  
+
+							echo "<div><table>";
+							echo "<tr></tr><tr></tr><tr>";
+							echo "<td align='center' style='font-size:25px'>pokemon <br> in team:</td>";
+							while($row = $result->fetch_assoc()) {
+								echo "<td align='center' style='font-size:25px'>$row[pokemon]</td>";
+							}
+
+							echo"<td align='center' style='font-size:25px'>
+								<form method='post'>
+								<button name='deleteTeam' value='deleteTeam' width='auto'>DELETE <br>TEAM</button>
+								</form>
+								</td>";
+							echo"</tr>";
+
+						}
+					}
+
+
+					/*
+					delete temprorary team
+					*/
+					function clearTempTeam() {
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						//ensure connection worked
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the databse
+						$conn->query("DELETE FROM tempTeam");
+					}
+
+					/*
+					delete temprorary team
+					*/
+					function saveTeam() {
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						//ensure connection worked
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the databse
+						$conn->query();
+						}
+
+					/*
+					display all pokemon
+					*/
 					function displayData($sqlquery){
 						echo "<div><table>";
 						//establish connection
@@ -124,14 +247,13 @@ table {
 						//query the databse
 						$result = $conn->query($sqlquery);
 
-
-						//TODO make a small space between word starts/ends and the column barrier
-						//display all headers
+						//headers
 						echo "<tr>";
 						//dex
 						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
 						//name
 						echo "<td align='center' style='font-size:25px'>Name</td>";
+						echo "<td align='center' style='font-size:25px'>add to team</td>";
 
 						echo "</tr>\n";
 
@@ -141,13 +263,16 @@ table {
 								echo "<tr>";
 								echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
 								echo "<td align='center' style='font-size:25px'>$row[name]</td>";
+								echo"<td align='center' style='font-size:25px'>
+								<form method='post'>
+								<button name='pokemonAdd' value='$row[name]' width='auto'>Add!</button>
+								</form>
+								</td>";
 								echo "</tr>\n";
 							}
 							echo "</table></div>";
 						$conn->close();
 						}
-						
-
 					?>
 					</h1>
 				</main>
