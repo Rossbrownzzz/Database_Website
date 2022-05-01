@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <style>
-form {     padding-top: 25px;     padding-bottom: 25px; }
-
+form {     
+		padding-top: 25px;
+		padding-bottom: 25px; 
+		padding-left: 25px;
+	}
+h2 {
+	padding-bottom: 25px; 
+	padding-left: 25px;
+}
 td {
 border: 1px solid black;
 }
@@ -85,7 +92,7 @@ table {
 						if (preg_match($allowable, $_GET['queryVal'])){
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
-							echo $userQuery;
+							echo "<h2>Results for: " . $userQuery . "</h2>";
 							//if only one type
 							if (preg_match("/^(((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater)){1}$/", $userQuery)){
 								$defQuery = "SELECT * from effectiveness where pokemonpokemonType = \"" . $userQuery . "\";";
@@ -109,7 +116,7 @@ table {
 							*/
 						}
 						else{
-							echo "invalid query";
+							echo "Invalid query";
 							displayDataType(0,0,0,0);
 						}
 					}
@@ -185,7 +192,7 @@ table {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "workplaceready";
+						$password = "ihatemiami7!";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
@@ -211,7 +218,7 @@ table {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "workplaceready";
+						$password = "ihatemiami7!";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						

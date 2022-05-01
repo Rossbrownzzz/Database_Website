@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <style>
-form {     padding-top: 25px;     padding-bottom: 25px; }
-
+form {     
+		padding-top: 25px;
+		padding-bottom: 25px; 
+		padding-left: 25px;
+	}
 td {
 border: 1px solid black;
 }
-
+h2 {
+	padding-bottom: 25px; 
+		padding-left: 25px;
+}
 table tr:nth-child(odd) {
     background-color: #ccc;
 }
@@ -82,7 +88,7 @@ table {
 "/(([a-z]|[A-Z]|\'|\(|\)|\-)+)$|(((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total)){1}(<|>|<=|>=|=){1}[0-9]+(,){0,1})((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total)){1}(( asc)|( desc)){1}){0,1})|(((^(hp)|^(hit points)|^(attack)|^(defense)|^(sp\. attack)|^(special attack)|^(sp\. defense)|^(special defense)|^(speed)|^(total))(( asc)|( desc))){1})/";
 
 $allowNameSearch=
-"/^(([a-z]|[A-Z]|\'|\(|\)|\-| )+)$/";
+"/^(([a-z]|[A-Z]|\'|\(|\)|\-)+)$/";
 $allowSingleStatSearch=
 "/^(((hp)|(hit points)|(attack)|(defense)|(sp\. attack)|(special attack)|(sp\. defense)|(special defense)|(speed)|(total)){1}(<|>|<=|>=|=){1}[0-9]+)$/";
 $allowManyStatSearch=
@@ -106,7 +112,7 @@ $allowStatAndAsc=
 							// accept the query
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
-							echo $userQuery;
+							echo "<h2>Results for: " . $userQuery . "</h2>";
 							//reformat it to be searchable based on database schema
 							$userQuery = preg_replace("/sp. attack|special attack/", "special_attack", $userQuery);
 							$userQuery = preg_replace("/sp. defense|special defense/", "special_defense", $userQuery);
@@ -142,11 +148,11 @@ $allowStatAndAsc=
 							{
 								//if they were searching name
 								if(!preg_match("/(legendary)|(none)|(sub-legendary)|(mythical)/", $userQuery)){
-									$query = $query . " WHERE stats.name LIKE \"%" . $userQuery . "%\"";
+									$query = $query . "WHERE stats.name LIKE \"%" . $userQuery . "%\"";
 								}
 								//if they were searching by legendary status
 								else{
-									$query = $query . " WHERE legendary_status = \"" . $userQuery . "\"";
+									$query = $query . "WHERE legendary_status = \"" . $userQuery . "\"";
 								}
 							}
 							
@@ -161,7 +167,7 @@ $allowStatAndAsc=
 							$query = $query . ";";
 						}
 						else{
-							echo "invalid query";
+							echo "Invalid query";
 							//default if invalid
 							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status, pokemontype FROM stats JOIN pokemon ON pokemon.name = stats.name JOIN pokemontype ON pokemon.name = pokemontype.name;";
 						}
@@ -188,7 +194,7 @@ $allowStatAndAsc=
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "workplaceready";
+						$password = "ihatemiami7!";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						

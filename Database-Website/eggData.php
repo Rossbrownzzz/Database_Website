@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <style>
-form {     padding-top: 25px;     padding-bottom: 25px; }
-
+form {     
+		padding-top: 25px;
+		padding-bottom: 25px; 
+		padding-left: 25px;
+	}
 td {
 border: 1px solid black;
 }
@@ -17,6 +20,10 @@ table {
 }
 main {
 	padding-bottom: 25px;
+}
+h2 {
+	padding-bottom: 25px; 
+		padding-left: 25px;
 }
 </style>
 
@@ -82,7 +89,7 @@ main {
 						if (preg_match($allowable, $_GET['queryVal'])){
 							$userQuery = $_GET['queryVal'];
 							// display the current query conditions
-							echo $userQuery;
+							echo "<h2>Results for: " . $userQuery . "</h2>";
 							//base query
 							$query = $query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name";
 
@@ -94,7 +101,7 @@ main {
 							}
 						}
 						else{
-							echo "invalid query";
+							echo "Invalid query";
 							//default if invalid
 							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
 						}
@@ -115,7 +122,7 @@ main {
 						//establish connection
 						$servername = "localhost";
 						$username = "admin";
-						$password = "workplaceready";
+						$password = "ihatemiami7!";
 						$dbname = "pokemondb";
 						$conn = new mysqli($servername, $username, $password, $dbname);
 						
