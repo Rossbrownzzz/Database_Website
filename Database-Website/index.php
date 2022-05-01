@@ -135,7 +135,7 @@ $allowStatAndAsc=
 							$userQuery = preg_replace("/,| , |, | ,/", " AND ", $userQuery);
 
 							//construct the query based on search values
-							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name ";
+							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status, pokemontype FROM stats JOIN pokemon ON pokemon.name = stats.name JOIN pokemontype ON pokemon.name = pokemontype.name";
 							
 							//search by name (ie, no asc, desc or >, < or =)
 							if(!preg_match("/(asc)|(desc)|>|<|=/", $userQuery))
@@ -162,12 +162,12 @@ $allowStatAndAsc=
 						else{
 							echo "invalid query";
 							//default if invalid
-							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status, pokemontype FROM stats JOIN pokemon ON pokemon.name = stats.name JOIN pokemontype ON pokemon.name = pokemontype.name;";
 						}
 					}
 					else{
 						//default
-						$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status FROM stats JOIN pokemon ON pokemon.name = stats.name;";
+						$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status, pokemontype FROM stats JOIN pokemon ON pokemon.name = stats.name JOIN pokemontype ON pokemon.name = pokemontype.name;";
 					}
 					
 
@@ -221,29 +221,93 @@ $allowStatAndAsc=
 						//total
 						echo "<td align='center' style='font-size:25px'>total</td>";
 						//legendary
-						echo "<td align='center' style='font-size:25px'>legendary</td>";
+						echo "<td align='center' style='font-size:25px'>legendary <br> status</td>";
+						echo "<td align='center' style='font-size:25px'>type 1</td>";
+						echo "<td align='center' style='font-size:25px'>type 2</td>";
+						//echo "<td align='center' style='font-size:25px'>ability 1</td>";
+						//echo "<td align='center' style='font-size:25px'>ability 2</td>";
+						//echo "<td align='center' style='font-size:25px'>ability 3</td>";
 
 						echo "</tr>\n";
 
 						//display all values
 						//TODO add radio buttons with the id and name matching the name of the pokemon.
+						$first = 1;
 						while($row = $result->fetch_assoc()) {
-							echo "<tr>";
-							echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[name]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[hp]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[attack]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[defense]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[special_attack]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[special_defense]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[speed]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[total_points]</td>";
-							echo "<td align='center' style='font-size:25px'>$row[legendary_status]</td>";
-							echo "</tr>\n";
+							//if first iteration
+							if($first == 1){$previousrow = $row; 
+							$first=0;
+							$pokemontype1 = "-";
+							$pokemontype2 = "-";
+							$ability1 = "-";
+							$ability2 = "-";
+							$ability3 = "-";
 							}
+
+							//if new pokemon, display old one
+							if ($row['name'] != $previousrow['name']){
+								echo "<tr>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[pokedex_number]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[name]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[hp]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[attack]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[defense]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[special_attack]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[special_defense]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[speed]</td>";
+								echo "<td align='center' style='font-size:25px'>$previousrow[total_points]</td>";
+								if($previousrow['legendary_status'] == "None"){
+									echo "<td align='center' style='font-size:25px'>-</td>";
+								}
+								else if($previousrow['legendary_status'] == "Sub-Legendary"){
+									echo "<td align='center' style='font-size:25px'>Sub<br>Legendary</td>";
+								}
+								else{
+									echo "<td align='center' style='font-size:25px'>$previousrow[legendary_status]</td>";
+								}
+								if ($pokemontype1 == "-"){
+									echo "<td align='center' style='font-size:25px'>$pokemontype2</td>";
+									echo "<td align='center' style='font-size:25px'>$pokemontype1</td>";
+								}
+								else{
+									echo "<td align='center' style='font-size:25px'>$pokemontype1</td>";
+									echo "<td align='center' style='font-size:25px'>$pokemontype2</td>";
+								}
+								//echo "<td align='center' style='font-size:25px'>$ability1</td>";
+								//echo "<td align='center' style='font-size:25px'>$ability2</td>";
+								//echo "<td align='center' style='font-size:25px'>$ability3</td>";
+								$previousrow = $row;
+								$pokemontype1 = "-";
+								$pokemontype2 = "-";
+								$ability1 = "-";
+								$ability2 = "-";
+								$ability3 = "-";
+								echo "</tr>\n";
+							}
+							
+							/*	if($ability1=="-"){
+									$ability1 = $row['ability'];
+								}
+								else if ($ability2=="-" && $row['ability'] != $ability1){
+									$ability2 = $row['ability'];
+								}
+								else if ($ability3=="-" && $row['ability'] != $ability2 && $row['ability'] != $ability1){
+									$ability3 = $row['ability'];
+								}*/
+
+								if($pokemontype2=="-"){
+									$pokemontype2 = $row['pokemontype'];
+								}
+								else if ($pokemontype1=="-" && $row['pokemontype'] != $pokemontype2){
+									$pokemontype1 = $row['pokemontype'];
+								}
+							
+							
+							
+						}
 						echo "</table></div>";
 						$conn->close();
-					}
+				}
 
 					?>
 					</h1>
