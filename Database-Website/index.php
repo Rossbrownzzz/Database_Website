@@ -153,7 +153,7 @@ $allowStatAndAsc=
 							
 							//if it was more than just asc or desc, and not search by name
 							if(($startsearch != 0) && (preg_match("/<|>|=/", $userQuery))){
-								$query = $query . "WHERE " . $userQuery;
+								$query = $query . " WHERE " . $userQuery;
 							}
 							//if there was an asc or desc part
 							if($ascORdesc != ""){
