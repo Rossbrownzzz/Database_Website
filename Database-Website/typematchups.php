@@ -88,9 +88,10 @@ table {
 							echo $userQuery;
 							//if only one type
 							if (preg_match("/^(((b|B)ug)|((d|D)ark)|((d|D)ragon)|((e|E)lectric)|((f|F)airy)|((f|F)ighting)|((f|F)ire)|((f|F)lying)|((g|G)host)|((g|G)rass)|((g|G)round)|((i|I)ce)|((n|N)ormal)|((p|P)oison)|((p|P)sychic)|((r|R)ock)|((s|S)teel)|((w|W)ater)){1}$/", $userQuery)){
+								$defQuery = "SELECT * from effectiveness where pokemonpokemonType = \"" . $userQuery . "\";";
+								$userQuery = preg_replace("/((f|F)ighting)/", "fight", $userQuery);
 								$offWeak = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery . " =0.5;";
 								$offStrong = "SELECT pokemonpokemonType FROM effectiveness WHERE against_" . $userQuery . " =2;";
-								$defQuery = "SELECT * from effectiveness where pokemonpokemonType = \"" . $userQuery . "\";";
 								displayDataType($defQuery, $offWeak, $offStrong, 1);
 							}
 							/*
