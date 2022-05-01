@@ -1,4 +1,22 @@
 <!DOCTYPE html>
+<style>
+form {     padding-top: 25px;     padding-bottom: 25px; }
+
+td {
+border: 1px solid black;
+}
+
+table tr:nth-child(odd) {
+    background-color: #ccc;
+}
+table tr:first-child {
+	background-color: #9fc5e8;
+}
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
@@ -39,6 +57,99 @@
 				</ul>
 			</div>
 		</nav>
-		<h2>Welcome to our Pokemon Teambuilder</h2>
+		<main>
+					<h1>
+					<?php
+
+					//TODO fix the formatting of the search bar, it looks terrible, and also line "echo $userQuery;" looks terrible too.
+					echo
+						'<form>
+						<label for="queryVal">Search:</label>
+						<input type="text" id="queryVal" name="queryVal"><br>
+						</form>'; 
+
+
+					//TODO add some kind of help popup or page thing that has some basic rules of how to search
+					$allowNameSearch = "/^(([a-z]|[A-Z]|\'|\(|\)|\-)+)$/";
+
+					//if a query is there
+					if (isset($_GET['queryVal']) && "" != $_GET['queryVal']){
+						// and it is allowable
+						if (preg_match($allowNameSearch, $_GET['queryVal'])){
+							// accept the query
+							$userQuery = $_GET['queryVal'];
+							// display the current query conditions
+							echo $userQuery;
+
+							//construct the base query
+							$query = "SELECT pokedex_number, pokemon.name FROM pokemon";
+							
+							$query = $query . " WHERE pokemon.name LIKE \"%" . $userQuery . "%\";";
+
+						}
+						else{
+							echo "invalid query";
+							//default if invalid
+							$query = "SELECT pokedex_number, pokemon.name FROM pokemon;";
+						}
+					}
+					else{
+						//default
+						$query = "SELECT pokedex_number, pokemon.name FROM pokemon";
+					}
+					
+					displayData($query);
+
+
+
+					//TODO add pokemon type to the table, add abbilities to the table 
+					
+					//TODO MAYBE: depending on space, remove pokedex number from table?
+
+					
+					function displayData($sqlquery){
+						echo "<div><table>";
+						//establish connection
+						$servername = "localhost";
+						$username = "admin";
+						$password = "workplaceready";
+						$dbname = "pokemondb";
+						$conn = new mysqli($servername, $username, $password, $dbname);
+						
+						//ensure connection worked
+						if ($conn->connect_error) {
+							die("Connection failed: " . $conn->connect_error);
+							}
+
+						//query the databse
+						$result = $conn->query($sqlquery);
+
+
+						//TODO make a small space between word starts/ends and the column barrier
+						//display all headers
+						echo "<tr>";
+						//dex
+						echo "<td align='center' style='font-size:25px'>pokedex #</td>";
+						//name
+						echo "<td align='center' style='font-size:25px'>Name</td>";
+
+						echo "</tr>\n";
+
+						//display all values
+						//TODO add radio buttons with the id and name matching the name of the pokemon.
+						while($row = $result->fetch_assoc()) {
+								echo "<tr>";
+								echo "<td align='center' style='font-size:25px'>$row[pokedex_number]</td>";
+								echo "<td align='center' style='font-size:25px'>$row[name]</td>";
+								echo "</tr>\n";
+							}
+							echo "</table></div>";
+						$conn->close();
+						}
+						
+
+					?>
+					</h1>
+				</main>
 	</body>
 </html>

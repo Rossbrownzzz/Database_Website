@@ -76,7 +76,6 @@ table {
 
 					//TODO show how many results each search 
 
-					//bug in total points asc or desc
 					//regex validates input
 					$allowable = 
 //	name only		 (stat																										equality		num		)( stat																												asc or desc)			(ONLY asc or desc part, no stat search)
@@ -160,7 +159,6 @@ $allowStatAndAsc=
 								$query = $query . " ORDER BY " . strrev($holdbackwards) . $ascORdesc;
 							}
 							$query = $query . ";";
-
 						}
 						else{
 							echo "invalid query";
