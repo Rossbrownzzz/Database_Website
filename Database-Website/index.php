@@ -167,7 +167,7 @@ $allowStatAndAsc=
 							$query = $query . ";";
 						}
 						else{
-							echo "Invalid query";
+							echo "<h2>Invalid query</h2>";
 							//default if invalid
 							$query = "SELECT pokedex_number, pokemon.name, hp, attack, defense, special_attack, special_defense, speed, total_points, legendary_status, pokemontype FROM stats JOIN pokemon ON pokemon.name = stats.name JOIN pokemontype ON pokemon.name = pokemontype.name;";
 						}

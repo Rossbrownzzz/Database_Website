@@ -101,7 +101,7 @@ h2 {
 							}
 						}
 						else{
-							echo "Invalid query";
+							echo "<h2>Invalid query</h2>";
 							//default if invalid
 							$query = "SELECT pokedex_number, pokemon.name, egg_cycles, percentage_male, egg_pokemonType FROM pokemon JOIN eggpokemontype2 ON eggpokemontype2.name = pokemon.name;";
 						}

@@ -116,7 +116,7 @@ table {
 							*/
 						}
 						else{
-							echo "Invalid query";
+							echo "<h2>Invalid query</h2>";
 							displayDataType(0,0,0,0);
 						}
 					}
