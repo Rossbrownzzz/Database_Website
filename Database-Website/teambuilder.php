@@ -142,8 +142,13 @@ table {
 							}
 
 						//query the databse
-						$conn->query("insert into tempTeam (idx, pokemon) VALUES (1, \"$pokemon\");");
-						
+						$result = $conn->query("SELECT * FROM tempTeam;");
+						if ($result->num_rows >= 6){
+							echo "You can't have more than six pokemon!";
+						}
+						else{
+							$conn->query("insert into tempTeam (idx, pokemon) VALUES (1, \"$pokemon\");");
+						}
 					}
 					
 					/*
@@ -211,7 +216,8 @@ table {
 					/*
 					delete temprorary team
 					*/
-					function saveTeam() {
+					function saveTeam($teamName) {
+						//TODO only let it save if the name is not in use
 						$servername = "localhost";
 						$username = "admin";
 						$password = "workplaceready";
@@ -222,9 +228,33 @@ table {
 						if ($conn->connect_error) {
 							die("Connection failed: " . $conn->connect_error);
 							}
+						
+						//make sure name is not previously in use
+						$nameCheck = $conn->query("SELECT * FROM savedTeams WHERE teamName = \"" . $teamName . "\";");
+						if($nameCheck->num_rows != 0){
+							echo "that name is already taken";
+						}
+						else{
 
-						//query the databse
-						$conn->query();
+						//make sure there are 6 pokemon
+						$result = $conn->query("SELECT * FROM tempTeam;");
+						if ($result->num_rows == 6){
+							//create query and fill in pokemon
+							$querytoSave = "insert into savedteams (teamName, pokemon1, pokemon2, pokemon3, pokemon4, pokemon5, pokemon6) VALUES(\"" . $teamName . "\"";
+							while($row = $result->fetch_assoc()) {
+								$querytoSave = $querytoSave . ", \"" . $row['pokemon'] . "\"";
+							}
+							$querytoSave = $querytoSave . ");";
+							//save it and clear the temp team
+							$conn->query($querytoSave);
+							clearTempTeam();
+							echo "Team saved!";
+						}
+						else{
+							echo "please make sure you have 6 pokemon";
+						}
+						}
+						$conn->close();
 						}
 
 					/*
